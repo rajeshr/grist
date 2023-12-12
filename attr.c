@@ -1250,10 +1250,34 @@ static struct object_id *default_attr_source(void)
 	return &attr_source;
 }
 
+static const char *interned_mode_string(unsigned int mode)
+{
+	static struct {
+		unsigned int val;
+		char str[7];
+	} mode_string[] = {
+		{ .val = 0040000 },
+		{ .val = 0100644 },
+		{ .val = 0100755 },
+		{ .val = 0120000 },
+		{ .val = 0160000 },
+	};
+	int i;
+
+	for (i = 0; i < ARRAY_SIZE(mode_string); i++) {
+		if (mode_string[i].val != mode)
+			continue;
+		if (!*mode_string[i].str)
+			snprintf(mode_string[i].str, sizeof(mode_string[i].str),
+				 "%06o", mode);
+		return mode_string[i].str;
+	}
+	BUG("Unsupported mode 0%o", mode);
+}
+
 static const char *builtin_object_mode_attr(struct index_state *istate, const char *path)
 {
 	unsigned int mode;
-	struct strbuf sb = STRBUF_INIT;
 
 	if (direction == GIT_ATTR_CHECKIN) {
 		struct object_id oid;
@@ -1287,8 +1311,8 @@ static const char *builtin_object_mode_attr(struct index_state *istate, const ch
 		else
 			return ATTR__UNSET;
 	}
-	strbuf_addf(&sb, "%06o", mode);
-	return strbuf_detach(&sb, NULL);
+
+	return interned_mode_string(mode);
 }
 
 
