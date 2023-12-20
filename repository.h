@@ -163,6 +163,9 @@ struct repository {
 	/* Repository's current hash algorithm, as serialized on disk. */
 	const struct git_hash_algo *hash_algo;
 
+	/* Repository's reference storage format, as serialized on disk. */
+	int ref_storage_format;
+
 	/* A unique-id for tracing purposes. */
 	int trace2_repo_id;
 
