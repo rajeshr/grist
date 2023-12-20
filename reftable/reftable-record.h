@@ -9,6 +9,7 @@ https://developers.google.com/open-source/licenses/bsd
 #ifndef REFTABLE_RECORD_H
 #define REFTABLE_RECORD_H
 
+#include <hash-ll.h>
 #include <stdint.h>
 
 /*
