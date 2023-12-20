@@ -2205,6 +2205,13 @@ int init_db(const char *git_dir, const char *real_git_dir,
 				      &repo_fmt, prev_bare_repository,
 				      init_shared_repository);
 
+	/*
+	 * Now that we have set up both the hash algorithm and the ref storage
+	 * format we can update the repository's settings accordingly.
+	 */
+	the_repository->hash_algo = &hash_algos[repo_fmt.hash_algo];
+	the_repository->ref_storage_format = repo_fmt.ref_storage_format;
+
 	if (!(flags & INIT_DB_SKIP_REFDB))
 		create_reference_database(repo_fmt.ref_storage_format,
 					  initial_branch, flags & INIT_DB_QUIET);
